@@ -13,10 +13,30 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from sushimax import settings
+from sitesushimax.views import ProductViewSet
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'products', ProductViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('sitesushimax.urls'))
+    path('', include('sitesushimax.urls')),
+    path('api/get-products/', include(router.urls)),
+    # path('api/v1/products/', ProductViewSet.as_view({'get': 'list'})),
+    # path('api/v1/products/<int:pk>/', ProductViewSet.as_view({'put': 'update'})),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+                      path('__debug__/', include(debug_toolbar.urls)),
+                  ] + urlpatterns
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

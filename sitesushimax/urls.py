@@ -1,6 +1,6 @@
 from django.urls import path
-from sitesushimax.views import index
+from sitesushimax.views import IndexPage
 
 urlpatterns = [
-    path('', index, name='home')
+    path('', IndexPage.as_view(), name='home'),
 ]
