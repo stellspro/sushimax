@@ -17,18 +17,22 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from sushimax import settings
-from sitesushimax.views import ProductViewSet
+from sitesushimax.views import ProductViewSet, PizzaViewSet, SushiViewSet, SnacksViewSet, SaladsViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'products', ProductViewSet)
+router.register(r'pizza', PizzaViewSet)
+router.register(r'sushi', SushiViewSet)
+router.register(r'snacks', SnacksViewSet)
+router.register(r'salads', SaladsViewSet)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('sitesushimax.urls')),
     path('api/get-products/', include(router.urls)),
-    # path('api/v1/products/', ProductViewSet.as_view({'get': 'list'})),
+    # path('api/get-salads/', show_salads),
     # path('api/v1/products/<int:pk>/', ProductViewSet.as_view({'put': 'update'})),
 ]
 

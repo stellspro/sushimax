@@ -17,13 +17,12 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-dark">
     <div class="container">
-      <a class="navbar-brand text-light" href="/">  </a>
-      
+            <a class="navbar-brand text-light" href="/">Домой</a>
             {% for m in menu %}<a class="navbar-brand text-light" href="{% url m.url_name %}">{{ m.name }}</a>{% endfor %}
             <div id="count_products">
 
             </div>
-            <a class="navbar-brand text-light" href="/my_cart">
+            <a class="navbar-brand text-light" href="{% url 'cart_page' %}">
               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-basket" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M10.243 1.071a.5.5 0 0 1 .686.172l3 5a.5.5 0 1 1-.858.514l-3-5a.5.5 0 0 1 .172-.686zm-4.486 0a.5.5 0 0 0-.686.172l-3 5a.5.5 0 1 0 .858.514l3-5a.5.5 0 0 0-.172-.686z"/>
                 <path fill-rule="evenodd" d="M1 7v1h14V7H1zM.5 6a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h15a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5H.5z"/>
@@ -56,6 +55,7 @@
 </div> --> 
 <div style="background-color:#b4b4b4fa;">
 {% block content %}
+
 
 
 {% endblock %}

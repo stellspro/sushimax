@@ -1,4 +1,7 @@
-menu = [{'name': 'Добавить статью', 'url_name': 'home'},
+menu = [{'name': 'Пиццы', 'url_name': 'pizza_page'},
+        {'name': 'Роллы', 'url_name': 'sushi_page'},
+        {'name': 'Закуски', 'url_name': 'snacks_page'},
+        {'name': 'Салаты', 'url_name': 'salads_page'},
         ]
 
 
