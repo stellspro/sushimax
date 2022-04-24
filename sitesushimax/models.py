@@ -35,6 +35,30 @@ class ProductCategory(models.Model):
         verbose_name = 'Категория продуктов'
         verbose_name_plural = 'Категории продуктов'
 
+
+class Order(models.Model):
+    user_name = models.CharField(max_length=120, verbose_name='Имя покупателя')
+    phone = models.CharField(max_length=15, verbose_name='Телефон')
+    address = models.TextField(verbose_name='Адрес покупателя')
+    payment = models.BooleanField(verbose_name='Способ оплаты')
+    data = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+
+    def __str__(self):
+        return self.user_name
+
+    class Meta:
+        verbose_name = 'Заказ'
+
+
+class Cart(models.Model):
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Номер заказа')
+    product_id = models.OneToOneField(Product, on_delete=models.CASCADE, verbose_name='Номер продукта')
+    coast = models.IntegerField(verbose_name='Количество')
+
+    class Meta:
+        verbose_name = 'Корзина'
+
+
 # Корзина + заказ
 # class Order(db.Model):
 #     id = db.Column(db.Integer(), primary_key=True)

@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from .models import Product, ProductCategory, TestModel
 from rest_framework import generics, viewsets
 from .serializers import ProductSerializer, TestSerializer
-from utils import DataMixin
+from .utils import DataMixin
 
 
 # Create your views here.

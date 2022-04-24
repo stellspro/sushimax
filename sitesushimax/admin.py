@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductCategory
+from .models import Product, ProductCategory, Order, Cart
 
 
 class SushiAdmin(admin.ModelAdmin):
@@ -20,3 +20,5 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, SushiAdmin)
 admin.site.register(ProductCategory, CategoryAdmin)
+admin.site.register(Order)
+admin.site.register(Cart)
