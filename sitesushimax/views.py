@@ -3,19 +3,22 @@ import json
 from django.forms import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic import ListView, CreateView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Product, ProductCategory, TestModel
+from .models import Product, ProductCategory, TestModel, Order, Cart
 from rest_framework import generics, viewsets
 from .serializers import ProductSerializer, TestSerializer
 from .utils import DataMixin
+from .forms import OrderingForm
 
 
-# Create your views here.
 class IndexPage(DataMixin, ListView):
+    """Главная страница"""
     # model = Product
     template_name = 'sitesushimax/index.html'
 
@@ -31,6 +34,7 @@ class IndexPage(DataMixin, ListView):
 
 
 class PizzaPage(DataMixin, ListView):
+    """Страница - пиццы"""
     template_name = 'sitesushimax/pizza.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -42,19 +46,8 @@ class PizzaPage(DataMixin, ListView):
         return Product.objects.all()
 
 
-class CartPage(DataMixin, ListView):
-    template_name = 'sitesushimax/my_cart.html'
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        con = self.get_user_context(title='Пиццы')
-        return dict(list(context.items()) + list(con.items()))
-
-    def get_queryset(self):
-        return Product.objects.all()
-
-
 class SushiPage(DataMixin, ListView):
+    """Страница - роллы"""
     template_name = 'sitesushimax/sushi.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -67,6 +60,7 @@ class SushiPage(DataMixin, ListView):
 
 
 class SnacksPage(DataMixin, ListView):
+    """Страница - казуски"""
     template_name = 'sitesushimax/snacks.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -79,6 +73,7 @@ class SnacksPage(DataMixin, ListView):
 
 
 class SaladsPage(DataMixin, ListView):
+    """Страница - салаты"""
     template_name = 'sitesushimax/salads.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -90,7 +85,44 @@ class SaladsPage(DataMixin, ListView):
         return Product.objects.all()
 
 
+class CartPage(DataMixin, ListView):
+    """Страница - корзина"""
+    template_name = 'sitesushimax/my_cart.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        con = self.get_user_context(title='Корзина')
+        return dict(list(context.items()) + list(con.items()))
+
+    def get_queryset(self):
+        return Product.objects.all()
+
+
+def checkout(request):
+    name = request.json['user_name']
+    phone = request.json['phone']
+    address = request.json['address']
+    payment = request.json['payment']
+    products_id = request.json['id']
+    products_coast = request.json['coast']
+    order = Order(user_name=name, phone=phone, address=address, payment=payment)
+    order.save()
+    print(products_id, products_coast)
+    for i in range(len(products_id)):
+        cart = Cart(order_id=order.id, product_id=products_id[i], count=products_coast[i])
+        cart.save()
+        print('Успешно')
+    return render(request, 'sitesushimax/index.html')
+
+class OrderingPage(CreateView):
+    form_class = OrderingForm
+    template_name = 'sitesushimax/order.html'
+    success_url = reverse_lazy('home')
+
+
+
 class ProductViewSet(viewsets.ModelViewSet):
+    """Отображение всех продуктов"""
     queryset = Product.objects.all().order_by('pk')
     serializer_class = TestSerializer
 
@@ -101,6 +133,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class PizzaViewSet(viewsets.ModelViewSet):
+    """Отображение - пиццы"""
     queryset = Product.objects.filter(category_id=1)
     serializer_class = TestSerializer
 
@@ -111,6 +144,7 @@ class PizzaViewSet(viewsets.ModelViewSet):
 
 
 class SushiViewSet(viewsets.ModelViewSet):
+    """Отображение - роллы"""
     queryset = Product.objects.filter(category_id=2)
     serializer_class = TestSerializer
 
@@ -121,6 +155,7 @@ class SushiViewSet(viewsets.ModelViewSet):
 
 
 class SnacksViewSet(viewsets.ModelViewSet):
+    """Отображение - закуски"""
     queryset = Product.objects.filter(category_id=3)
     serializer_class = TestSerializer
 
@@ -131,6 +166,7 @@ class SnacksViewSet(viewsets.ModelViewSet):
 
 
 class SaladsViewSet(viewsets.ModelViewSet):
+    """Отображение - салаты"""
     queryset = Product.objects.filter(category_id=4)
     serializer_class = TestSerializer
 

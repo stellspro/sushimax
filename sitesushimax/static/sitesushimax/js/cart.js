@@ -105,8 +105,8 @@ $.getJSON('/api/get-products/products', function(data) {
         console.log(order)
         $.ajax({
             type: "POST",
-            url: '/order_page',
-            data: JSON.stringify({ 'id': products_id , 'coast': products_coast, 'user_name' : order['name'], 'phone': order['phone'], 'address':order['address'], 'payment':'наличные' }),
+            url: '/order_page/',
+            data: JSON.stringify({csrfmiddlewaretoken: order['token'], 'id': products_id , 'coast': products_coast, 'user_name' : order['name'], 'phone': order['phone'], 'address':order['address'], 'payment':true }),
             contentType : "application/json"
           })
         cart = {}
@@ -120,9 +120,11 @@ $.getJSON('/api/get-products/products', function(data) {
     let user_name = document.getElementById('name_user').value
     let phone = document.getElementById('user_phone').value
     let address = document.getElementById('address').value
+    let token = document.getElementById('token').value
     order['name'] = user_name
     order['phone'] = phone
     order['address'] = address
+    order['token'] = token
     if (user_name && phone && address) {
         document.getElementById('name_user').value = ''
         document.getElementById('user_phone').value = ''
@@ -144,7 +146,6 @@ $.getJSON('/api/get-products/products', function(data) {
             
         })  
 });
-
 
 
 function checkCart() {
