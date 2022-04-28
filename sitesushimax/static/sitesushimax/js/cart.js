@@ -103,10 +103,11 @@ $.getJSON('/api/get-products/products', function(data) {
         console.log(products_coast)
         console.log(order['name'])
         console.log(order)
+        console.log(order['token'])
         $.ajax({
             type: "POST",
-            url: '/order_page/',
-            data: JSON.stringify({csrfmiddlewaretoken: order['token'], 'id': products_id , 'coast': products_coast, 'user_name' : order['name'], 'phone': order['phone'], 'address':order['address'], 'payment':true }),
+            url: 'http://127.0.0.1:8000/order_page/',
+            data: JSON.stringify({'id': products_id , 'coast': products_coast, 'user_name' : order['name'], 'phone': order['phone'], 'address':order['address'], 'payment':true }),
             contentType : "application/json"
           })
         cart = {}

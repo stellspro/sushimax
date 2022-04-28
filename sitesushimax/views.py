@@ -1,10 +1,10 @@
 import json
 
 from django.forms import model_to_dict
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.generic import ListView, CreateView
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -98,27 +98,37 @@ class CartPage(DataMixin, ListView):
         return Product.objects.all()
 
 
+@csrf_exempt
 def checkout(request):
-    name = request.json['user_name']
-    phone = request.json['phone']
-    address = request.json['address']
-    payment = request.json['payment']
-    products_id = request.json['id']
-    products_coast = request.json['coast']
-    order = Order(user_name=name, phone=phone, address=address, payment=payment)
-    order.save()
-    print(products_id, products_coast)
-    for i in range(len(products_id)):
-        cart = Cart(order_id=order.id, product_id=products_id[i], count=products_coast[i])
-        cart.save()
-        print('Успешно')
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        print(data)
+        print(data['id'])
+    # s = x.decode()
+    # print(type(s))
+        name = data['user_name']
+        phone = data['phone']
+        address = data['address']
+        payment = data['payment']
+        products_id = data['id']
+        products_coast = data['coast']
+        # product = Product.objects.all().order_by('id')
+        order = Order(user_name=name, phone=phone, address=address, payment=payment)
+        order.save()
+        print(products_id, products_coast)
+        for i in range(len(products_id)):
+            product = Product.objects.get(pk=products_id[i])
+            cart = Cart(order_id=order, product_id=product, coast=products_coast[i])
+            cart.save()
+            print('Успешно')
     return render(request, 'sitesushimax/index.html')
+
 
 class OrderingPage(CreateView):
     form_class = OrderingForm
     template_name = 'sitesushimax/order.html'
     success_url = reverse_lazy('home')
-
 
 
 class ProductViewSet(viewsets.ModelViewSet):

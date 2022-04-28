@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 
 function loadGoods(){
-    $.get('api/get-products/pizza/', function (data) {
+    $.get('/api/get-products/pizza/', function (data) {
         console.log(data)
         data = JSON.stringify(data)
         data = JSON.parse(data)

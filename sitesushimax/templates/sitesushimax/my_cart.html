@@ -24,7 +24,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" name="token" value="{{ csrf_token }}">
+                <input type="hidden" id="token" value="{{ csrf_token }}">
                 <label for="name_user" class="form-label">Имя: </label>
                 <input type="text" class="form-control mb-3" id="name_user" maxlength="40">
                 <label for="user_phone" class="form-label">Телефон: </label>

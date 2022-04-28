@@ -48,6 +48,7 @@ class Order(models.Model):
 
     class Meta:
         verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
 
 
 class Cart(models.Model):
@@ -55,8 +56,10 @@ class Cart(models.Model):
     product_id = models.OneToOneField(Product, on_delete=models.CASCADE, verbose_name='Номер продукта')
     coast = models.IntegerField(verbose_name='Количество')
 
+
     class Meta:
         verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
 
 
 # Корзина + заказ
